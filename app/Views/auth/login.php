@@ -15,7 +15,7 @@
 <body>
   <h1>Connexion</h1>
 
-  <form method="post" action="/login">
+  <form method="post" action="<?= BASE_URL ?>/login">
     <div>
       <label>Email</label><br>
       <input type="email" name="email" required>
