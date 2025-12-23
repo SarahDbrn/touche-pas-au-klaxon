@@ -16,7 +16,10 @@
   <h1>Connexion</h1>
 
   <form method="post" action="<?= BASE_URL ?>/login">
+<<<<<<< HEAD
     <input type="hidden" name="redirect" value="<?= htmlspecialchars($_GET['redirect'] ?? '/dashboard') ?>">
+=======
+>>>>>>> c9a36013a9595e328cf55b0e9fa9bab5f74bd7cc
     <div>
       <label>Email</label><br>
       <input type="email" name="email" required>
