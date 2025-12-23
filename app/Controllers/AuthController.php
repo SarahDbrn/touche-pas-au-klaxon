@@ -5,10 +5,24 @@ class AuthController extends Controller
 {
     public function login(): void
     {
-        // 1 Vérifier que le formulaire est soumis en POST
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            redirectTo('/login');
-        }
+        // 1.1 GET : afficher le formulaire
+    if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+        // optionnel mais propre : si déjà connecté, on évite de revoir login
+        // requireGuest('/dashboard');
+
+        $this->render('auth/login', [
+            'title' => 'Connexion',
+            'errors' => [],
+        ]);
+        return;
+    }
+
+    // 1.2 POST : traiter le formulaire
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        http_response_code(405);
+        echo "Method not allowed";
+        return;
+    }
 
         // 2 Récupération des champs
         $email = trim($_POST['email'] ?? '');
