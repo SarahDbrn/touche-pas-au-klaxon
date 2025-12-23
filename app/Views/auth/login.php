@@ -1,3 +1,11 @@
+<?php if (!empty($errors)): ?>
+  <ul>
+    <?php foreach ($errors as $err): ?>
+      <li><?= htmlspecialchars($err) ?></li>
+    <?php endforeach; ?>
+  </ul>
+<?php endif; ?>
+
 <!doctype html>
 <html lang="fr">
 <head>
@@ -19,6 +27,6 @@
     <button type="submit">Se connecter</button>
   </form>
 
-  <p><a href="/">Retour accueil</a></p>
+  <p><a href="<?= BASE_URL ?>/">Retour accueil</a></p>
 </body>
 </html>
