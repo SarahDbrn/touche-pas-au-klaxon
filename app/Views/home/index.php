@@ -7,6 +7,6 @@
 <body>
   <h1>Accueil</h1>
   <p>Bienvenue sur Touche pas au klaxon 🚗</p>
-  <p><a href="/login">Aller à la page de connexion</a></p>
+  <p><a href="<?= BASE_URL ?>/login">Aller à la page de connexion</a></p>
 </body>
 </html>
