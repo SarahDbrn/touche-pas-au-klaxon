@@ -24,4 +24,13 @@ class User
 
         return $user ?: null;
     }
+
+    public static function all(): array
+    {
+        $pdo = Database::getConnection();
+        $stmt = $pdo->query("SELECT id, firstname, lastname, email, phone, role FROM users ORDER BY lastname, firstname");
+        
+        return $stmt->fetchAll() ?: [];
+    }
+
 }

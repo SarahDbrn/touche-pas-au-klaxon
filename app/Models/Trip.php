@@ -132,4 +132,35 @@ final class Trip
 
         return (int)Database::getConnection()->lastInsertId();
     }
+
+    public static function allWithAgenciesAndAuthor(): array
+    {
+        $pdo = Database::getConnection();
+        $sql = "
+            SELECT
+                t.id,
+                t.departure_at, t.arrival_at,
+                t.total_seats, t.available_seats,
+                a1.name AS departure_agency,
+                a2.name AS arrival_agency,
+                u.firstname AS author_firstname,
+                u.lastname AS author_lastname,
+                u.email AS author_email
+            FROM trips t
+            JOIN agencies a1 ON a1.id = t.departure_agency_id
+            JOIN agencies a2 ON a2.id = t.arrival_agency_id
+            JOIN users u ON u.id = t.user_id
+            ORDER BY t.departure_at ASC
+        ";
+        $stmt = $pdo->query($sql);
+        return $stmt->fetchAll() ?: [];
+    }
+
+    public static function deleteById(int $id): void
+    {
+        $pdo = Database::getConnection();
+        $stmt = $pdo->prepare("DELETE FROM trips WHERE id = :id");
+        $stmt->execute(['id' => $id]);
+    }
+
 }

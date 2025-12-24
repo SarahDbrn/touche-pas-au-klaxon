@@ -85,3 +85,17 @@ function verifyCsrfToken(?string $token): bool
 {
     return isset($_SESSION['csrf_token']) && is_string($token) && hash_equals($_SESSION['csrf_token'], $token);
 }
+
+/**
+ * Zone admin -> exige login + rôle ADMIN
+ */
+function requireAdmin(): void
+{
+    requireLogin();
+
+    if (!isAdmin()) {
+        http_response_code(403);
+        echo "Accès refusé (admin uniquement).";
+        exit;
+    }
+}
