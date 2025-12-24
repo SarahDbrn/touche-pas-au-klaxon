@@ -5,11 +5,32 @@ class User
 {
     public static function findByEmail(string $email): ?array
     {
-        $pdo = Database::getConnection();
-        $stmt = $pdo->prepare("SELECT id, email, password, role FROM users WHERE email = :email LIMIT 1");
-        $stmt->execute(['email' => $email]);
+        $sql = "
+            SELECT
+                id,
+                firstname,
+                lastname,
+                email,
+                phone,
+                password,
+                role
+            FROM users
+            WHERE email = :email
+            LIMIT 1
+        ";
+
+        $stmt = Database::query($sql, ['email' => $email]);
         $user = $stmt->fetch();
 
         return $user ?: null;
     }
+
+    public static function all(): array
+    {
+        $pdo = Database::getConnection();
+        $stmt = $pdo->query("SELECT id, firstname, lastname, email, phone, role FROM users ORDER BY lastname, firstname");
+        
+        return $stmt->fetchAll() ?: [];
+    }
+
 }

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 class AuthController extends Controller
 {
+    // LOGIN
     public function login(): void
     {
         // 1.1 GET : afficher le formulaire
@@ -50,9 +51,14 @@ class AuthController extends Controller
 
         // 5 LOGIN RÉUSSI → mise en session
         $_SESSION['user'] = [
-            'id'    => $user['id'],
-            'email' => $user['email'],
+            'id' => (int)$user['id'],
+            'firstname' => (string)($user['firstname'] ?? ''),
+            'lastname' => (string)($user['lastname'] ?? ''),
+            'email' => (string)($user['email'] ?? ''),
+            'phone' => (string)($user['phone'] ?? ''),
+            'role' => (string)($user['role'] ?? 'USER'),
         ];
+
 
         // 6 REDIRECTION INTELLIGENTE
         $redirect = $_POST['redirect'] ?? '/dashboard';
@@ -64,4 +70,38 @@ class AuthController extends Controller
 
         redirectTo($redirect);
     }
+    // LOGOUT
+    public function logout(): void
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            redirectTo('/');
+        }
+
+        if (!verifyCsrfToken($_POST['csrf'] ?? null)) {
+            http_response_code(403);
+            echo "CSRF token invalide";
+            exit;
+        }
+
+        // Destruction propre de la session
+        $_SESSION = [];
+
+        if (ini_get('session.use_cookies')) {
+            $params = session_get_cookie_params();
+            setcookie(
+                session_name(),
+                '',
+                time() - 42000,
+                $params['path'],
+                $params['domain'],
+                $params['secure'],
+                $params['httponly']
+            );
+        }
+
+        session_destroy();
+
+        redirectTo('/');
+    }
+
 }
