@@ -1,3 +1,5 @@
+DROP DATABASE IF EXISTS touche_pas_au_klaxon;
+
 CREATE DATABASE IF NOT EXISTS touche_pas_au_klaxon
 CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -29,6 +31,9 @@ CREATE TABLE trips (
   departure_agency_id INT NOT NULL,
   arrival_agency_id INT NOT NULL,
 
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NULL ON UPDATE CURRENT_TIMESTAMP,
+
   CONSTRAINT fk_trip_author
   FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE RESTRICT,
 
@@ -47,8 +52,5 @@ CREATE TABLE trips (
   CONSTRAINT chk_positive_total_seats CHECK (total_seats > 0),
   CONSTRAINT chk_positive_available_seats CHECK (available_seats >= 0),
   CONSTRAINT chk_agencies CHECK (departure_agency_id <> arrival_agency_id)
-
-  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at DATETIME NULL ON UPDATE CURRENT_TIMESTAMP
 
 );
