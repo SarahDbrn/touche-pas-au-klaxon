@@ -15,7 +15,10 @@
     <?php if (function_exists('isLoggedIn') && isLoggedIn()): ?>
       <div>
         <a class="btn btn-primary me-2" href="<?= BASE_URL ?>/trip/create">Proposer un trajet</a>
-        <a class="btn btn-outline-secondary" href="<?= BASE_URL ?>/logout">Déconnexion</a>
+        <form method="post" action="<?= BASE_URL ?>/logout" style="display:inline;">
+          <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrfToken()) ?>">
+          <button type="submit">Déconnexion</button>
+    </form>
       </div>
     <?php else: ?>
       <a class="btn btn-primary" href="<?= BASE_URL ?>/login">Se connecter</a>

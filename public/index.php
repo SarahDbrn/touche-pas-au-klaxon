@@ -40,4 +40,5 @@ if ($path === '/index.php') {
 }
 
 $router = new Router();
-$router->dispatch($path);
+$router->dispatch($path, $_SERVER['REQUEST_METHOD']);
+
