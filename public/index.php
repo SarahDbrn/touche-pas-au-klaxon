@@ -9,11 +9,17 @@ require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../core/Router.php';
 require_once __DIR__ . '/../core/Auth.php';
 
-spl_autoload_register(function (string $class): void {
+/**
+ * Chemin racine du projet (ex: .../touche-pas-au-klaxon)
+ * Utilisé par l'autoloader.
+ */
+$baseDir = dirname(__DIR__);
+
+spl_autoload_register(function (string $class) use ($baseDir): void {
     $paths = [
         $baseDir . '/app/Controllers/',
         $baseDir . '/app/Models/',
-        $baseDir . '/core',
+        $baseDir . '/core/',
     ];
 
     foreach ($paths as $path) {
@@ -41,4 +47,3 @@ if ($path === '/index.php') {
 
 $router = new Router();
 $router->dispatch($path, $_SERVER['REQUEST_METHOD']);
-
