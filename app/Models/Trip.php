@@ -149,12 +149,13 @@ final class Trip
             FROM trips t
             JOIN agencies a1 ON a1.id = t.departure_agency_id
             JOIN agencies a2 ON a2.id = t.arrival_agency_id
-            JOIN users u ON u.id = t.user_id
+            JOIN users u ON u.id = t.author_id
             ORDER BY t.departure_at ASC
         ";
         $stmt = $pdo->query($sql);
         return $stmt->fetchAll() ?: [];
     }
+
 
     public static function deleteById(int $id): void
     {

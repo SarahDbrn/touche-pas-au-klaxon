@@ -5,7 +5,7 @@ class AdminController extends Controller
 {
     public function dashboard(): void
     {
-        Auth::requireAdmin();
+        requireAdmin();
 
         $this->render('admin/dashboard', [
             'title' => 'Tableau de bord',
@@ -14,9 +14,9 @@ class AdminController extends Controller
 
     public function users(): void
     {
-        Auth::requireAdmin();
+        requireAdmin();
 
-        $users = User::all(); // à créer dans User.php
+        $users = User::all();
 
         $this->render('admin/users', [
             'title' => 'Utilisateurs',
@@ -26,27 +26,27 @@ class AdminController extends Controller
 
     public function agencies(): void
     {
-        Auth::requireAdmin();
+        requireAdmin();
 
-        $agencies = Agency::all(); // à créer dans Agency.php
+        $agencies = Agency::all();
 
         $this->render('admin/agencies/index', [
             'title' => 'Agences',
             'agencies' => $agencies,
-            'csrf' => Auth::csrfToken(),
+            'csrf' => csrfToken(),
         ]);
     }
 
     public function createAgency(): void
     {
-        Auth::requireAdmin();
+        requireAdmin();
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: ' . BASE_URL . '/admin/agencies');
             exit;
         }
 
-        Auth::verifyCsrfToken($_POST['csrf'] ?? '');
+        verifyCsrfToken($_POST['csrf'] ?? '');
 
         $name = trim((string)($_POST['name'] ?? ''));
         $errors = [];
@@ -60,7 +60,6 @@ class AdminController extends Controller
         }
 
         if (!empty($errors)) {
-            // flash error + retour
             $_SESSION['flash'] = ['type' => 'danger', 'message' => implode(' ', $errors)];
             header('Location: ' . BASE_URL . '/admin/agencies');
             exit;
@@ -75,7 +74,7 @@ class AdminController extends Controller
 
     public function editAgency(): void
     {
-        Auth::requireAdmin();
+        requireAdmin();
 
         $id = (int)($_GET['id'] ?? 0);
         if ($id <= 0) {
@@ -93,20 +92,20 @@ class AdminController extends Controller
         $this->render('admin/agencies/edit', [
             'title' => 'Modifier une agence',
             'agency' => $agency,
-            'csrf' => Auth::csrfToken(),
+            'csrf' => csrfToken(),
         ]);
     }
 
     public function updateAgency(): void
     {
-        Auth::requireAdmin();
+        requireAdmin();
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: ' . BASE_URL . '/admin/agencies');
             exit;
         }
 
-        Auth::verifyCsrfToken($_POST['csrf'] ?? '');
+        verifyCsrfToken($_POST['csrf'] ?? '');
 
         $id = (int)($_POST['id'] ?? 0);
         $name = trim((string)($_POST['name'] ?? ''));
@@ -132,14 +131,14 @@ class AdminController extends Controller
 
     public function deleteAgency(): void
     {
-        Auth::requireAdmin();
+        requireAdmin();
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: ' . BASE_URL . '/admin/agencies');
             exit;
         }
 
-        Auth::verifyCsrfToken($_POST['csrf'] ?? '');
+        verifyCsrfToken($_POST['csrf'] ?? '');
 
         $id = (int)($_POST['id'] ?? 0);
         if ($id <= 0) {
@@ -151,7 +150,6 @@ class AdminController extends Controller
             Agency::delete($id);
             $_SESSION['flash'] = ['type' => 'success', 'message' => "Agence supprimée."];
         } catch (Throwable $e) {
-            // typiquement FK si utilisée dans des trajets
             $_SESSION['flash'] = ['type' => 'danger', 'message' => "Suppression impossible (agence utilisée dans des trajets)."];
         }
 
@@ -161,27 +159,27 @@ class AdminController extends Controller
 
     public function trips(): void
     {
-        Auth::requireAdmin();
+        requireAdmin();
 
-        $trips = Trip::allWithAgenciesAndAuthor(); // à créer dans Trip.php
+        $trips = Trip::allWithAgenciesAndAuthor();
 
         $this->render('admin/trips', [
             'title' => 'Trajets',
             'trips' => $trips,
-            'csrf' => Auth::csrfToken(),
+            'csrf' => csrfToken(),
         ]);
     }
 
     public function deleteTrip(): void
     {
-        Auth::requireAdmin();
+        requireAdmin();
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: ' . BASE_URL . '/admin/trips');
             exit;
         }
 
-        Auth::verifyCsrfToken($_POST['csrf'] ?? '');
+        verifyCsrfToken($_POST['csrf'] ?? '');
 
         $id = (int)($_POST['id'] ?? 0);
         if ($id <= 0) {
