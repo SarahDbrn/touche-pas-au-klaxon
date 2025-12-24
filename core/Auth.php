@@ -50,3 +50,38 @@ function requireGuest(string $fallback = '/dashboard'): void
     }
     redirectTo($fallback);
 }
+
+/**
+ * Retourne l'utilisateur en session ou null
+ * @return array<string,mixed>|null
+ */
+function currentUser(): ?array
+{
+    return (isset($_SESSION['user']) && is_array($_SESSION['user'])) ? $_SESSION['user'] : null;
+}
+
+function currentUserId(): ?int
+{
+    $u = currentUser();
+    return isset($u['id']) ? (int)$u['id'] : null;
+}
+
+function isAdmin(): bool
+{
+    $u = currentUser();
+    return isset($u['role']) && $u['role'] === 'ADMIN';
+}
+
+/** CSRF */
+function csrfToken(): string
+{
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+    return $_SESSION['csrf_token'];
+}
+
+function verifyCsrfToken(?string $token): bool
+{
+    return isset($_SESSION['csrf_token']) && is_string($token) && hash_equals($_SESSION['csrf_token'], $token);
+}

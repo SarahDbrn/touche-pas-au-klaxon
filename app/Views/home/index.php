@@ -39,6 +39,7 @@
             <th>Places dispo</th>
             <?php if (function_exists('isLoggedIn') && isLoggedIn()): ?>
               <th>Détails</th>
+              <th>Actions</th>
             <?php endif; ?>
           </tr>
         </thead>
@@ -61,6 +62,32 @@
                   >
                     Voir
                   </button>
+                </td>
+                <td>
+                  <?php
+                    $canManage = function_exists('isAdmin') && isAdmin();
+                    if (!$canManage && function_exists('currentUserId')) {
+                        $canManage = ((int)$trip['author_id'] === (int)currentUserId());
+                    }
+                  ?>
+
+                  <?php if ($canManage): ?>
+                    <a class="btn btn-sm btn-outline-secondary"
+                      href="<?= BASE_URL ?>/trip/edit?id=<?= (int)$trip['id'] ?>">
+                      Modifier
+                    </a>
+
+                    <form method="post"
+                          action="<?= BASE_URL ?>/trip/delete"
+                          class="d-inline"
+                          onsubmit="return confirm('Supprimer ce trajet ?');">
+                      <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(csrfToken()) ?>">
+                      <input type="hidden" name="id" value="<?= (int)$trip['id'] ?>">
+                      <button class="btn btn-sm btn-outline-danger" type="submit">Supprimer</button>
+                    </form>
+                  <?php else: ?>
+                    <span class="text-muted">—</span>
+                  <?php endif; ?>
                 </td>
               <?php endif; ?>
             </tr>
