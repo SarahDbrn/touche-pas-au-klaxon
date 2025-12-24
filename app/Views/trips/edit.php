@@ -1,9 +1,11 @@
-<?php if (!empty($_SESSION['flash_success'])): ?>
-  <div class="alert alert-success"><?= htmlspecialchars($_SESSION['flash_success']) ?></div>
-  <?php unset($_SESSION['flash_success']); ?>
-<?php endif; ?>
+<?php
+declare(strict_types=1);
+// Vue : modification d’un trajet
+// Layout global actif
+?>
 
 <?php if (!empty($errors)): ?>
+  <!-- Affichage des erreurs de validation serveur -->
   <div class="alert alert-danger">
     <ul class="mb-0">
       <?php foreach ($errors as $err): ?>
@@ -13,55 +15,102 @@
   </div>
 <?php endif; ?>
 
-<h1>Modifier un trajet</h1>
+<h1 class="h4 mb-3">Modifier un trajet</h1>
 
-<form method="post" action="<?= BASE_URL ?>/trip/edit?id=<?= (int)$trip['id'] ?>">
-  <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(csrfToken()) ?>">
+<!--
+  Formulaire d’édition
+  - POST (action sensible)
+  - CSRF obligatoire
+  - id passé dans l’URL (comme tu l’avais déjà)
+-->
+<form method="post" action="<?= BASE_URL ?>/trip/edit?id=<?= (int)$trip['id'] ?>" class="row g-3">
 
-  <div>
-    <label>Agence de départ</label><br>
-    <select name="departure_agency_id" required>
+  <!-- Token CSRF -->
+  <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(Auth::csrfToken()) ?>">
+
+  <!-- Agence de départ -->
+  <div class="col-md-6">
+    <label class="form-label">Agence de départ</label>
+    <select class="form-select" name="departure_agency_id" required>
       <?php foreach ($agencies as $a): ?>
-        <option value="<?= (int)$a['id'] ?>" <?= ((int)$trip['departure_agency_id'] === (int)$a['id']) ? 'selected' : '' ?>>
+        <option
+          value="<?= (int)$a['id'] ?>"
+          <?= ((int)$trip['departure_agency_id'] === (int)$a['id']) ? 'selected' : '' ?>
+        >
           <?= htmlspecialchars($a['name']) ?>
         </option>
       <?php endforeach; ?>
     </select>
   </div>
 
-  <div>
-    <label>Agence d’arrivée</label><br>
-    <select name="arrival_agency_id" required>
+  <!-- Agence d’arrivée -->
+  <div class="col-md-6">
+    <label class="form-label">Agence d’arrivée</label>
+    <select class="form-select" name="arrival_agency_id" required>
       <?php foreach ($agencies as $a): ?>
-        <option value="<?= (int)$a['id'] ?>" <?= ((int)$trip['arrival_agency_id'] === (int)$a['id']) ? 'selected' : '' ?>>
+        <option
+          value="<?= (int)$a['id'] ?>"
+          <?= ((int)$trip['arrival_agency_id'] === (int)$a['id']) ? 'selected' : '' ?>
+        >
           <?= htmlspecialchars($a['name']) ?>
         </option>
       <?php endforeach; ?>
     </select>
   </div>
 
-  <div>
-    <label>Départ</label><br>
-    <input type="datetime-local" name="departure_at"
-      value="<?= htmlspecialchars(date('Y-m-d\TH:i', strtotime($trip['departure_at']))) ?>" required>
+  <!-- Date/heure départ -->
+  <div class="col-md-6">
+    <label class="form-label">Date/heure de départ</label>
+    <input
+      class="form-control"
+      type="datetime-local"
+      name="departure_at"
+      value="<?= htmlspecialchars(date('Y-m-d\TH:i', strtotime($trip['departure_at']))) ?>"
+      required
+    >
   </div>
 
-  <div>
-    <label>Arrivée</label><br>
-    <input type="datetime-local" name="arrival_at"
-      value="<?= htmlspecialchars(date('Y-m-d\TH:i', strtotime($trip['arrival_at']))) ?>" required>
+  <!-- Date/heure arrivée -->
+  <div class="col-md-6">
+    <label class="form-label">Date/heure d’arrivée</label>
+    <input
+      class="form-control"
+      type="datetime-local"
+      name="arrival_at"
+      value="<?= htmlspecialchars(date('Y-m-d\TH:i', strtotime($trip['arrival_at']))) ?>"
+      required
+    >
   </div>
 
-  <div>
-    <label>Places totales</label><br>
-    <input type="number" name="total_seats" min="1" value="<?= (int)$trip['total_seats'] ?>" required>
+  <!-- Places totales -->
+  <div class="col-md-6">
+    <label class="form-label">Places totales</label>
+    <input
+      class="form-control"
+      type="number"
+      name="total_seats"
+      min="1"
+      value="<?= (int)$trip['total_seats'] ?>"
+      required
+    >
   </div>
 
-  <div>
-    <label>Places disponibles</label><br>
-    <input type="number" name="available_seats" min="0" value="<?= (int)$trip['available_seats'] ?>" required>
+  <!-- Places disponibles -->
+  <div class="col-md-6">
+    <label class="form-label">Places disponibles</label>
+    <input
+      class="form-control"
+      type="number"
+      name="available_seats"
+      min="0"
+      value="<?= (int)$trip['available_seats'] ?>"
+      required
+    >
   </div>
 
-  <button type="submit">Enregistrer</button>
-  <a href="<?= BASE_URL ?>/">Annuler</a>
+  <!-- Boutons -->
+  <div class="col-12">
+    <button class="btn btn-primary" type="submit">Enregistrer</button>
+    <a class="btn btn-outline-secondary" href="<?= BASE_URL ?>/">Annuler</a>
+  </div>
 </form>

@@ -1,14 +1,27 @@
-<!doctype html>
-<html lang="fr">
-<head>
-  <meta charset="utf-8">
-  <title><?= htmlspecialchars($title ?? 'Dashboard') ?></title>
-</head>
-<body>
-  <h1>Dashboard</h1>
-  <p>✅ Page privée : tu es connecté(e).</p>
+<?php
+declare(strict_types=1);
+// Vue : tableau de bord utilisateur
+// Accessible uniquement aux utilisateurs connectés
+// Le header et le footer sont fournis par le layout global
+?>
 
-  <p><a href="<?= BASE_URL ?>/">Accueil</a></p>
-</body>
-</html>
+<!-- Titre principal de la page -->
+<h1 class="mb-3">Dashboard</h1>
 
+<!-- Message de confirmation de connexion -->
+<p class="alert alert-success">
+  ✅ Page privée : vous êtes connecté(e).
+</p>
+
+<!--
+  Zone d’informations ou d’actions futures
+  (ex : statistiques, raccourcis, liens rapides)
+-->
+<p class="text-muted">
+  Cet espace est réservé aux utilisateurs authentifiés.
+</p>
+
+<!-- Lien de retour vers la page d’accueil -->
+<p>
+  <a href="<?= BASE_URL ?>/">← Retour à l’accueil</a>
+</p>
