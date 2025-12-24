@@ -14,6 +14,7 @@
     <h1 class="h3 m-0">Touche pas au klaxon</h1>
     <?php if (function_exists('isLoggedIn') && isLoggedIn()): ?>
       <div>
+        <a class="btn btn-primary me-2" href="<?= BASE_URL ?>/trip/create">Proposer un trajet</a>
         <a class="btn btn-outline-secondary" href="<?= BASE_URL ?>/logout">Déconnexion</a>
       </div>
     <?php else: ?>

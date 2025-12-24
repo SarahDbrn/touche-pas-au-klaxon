@@ -50,9 +50,14 @@ class AuthController extends Controller
 
         // 5 LOGIN RÉUSSI → mise en session
         $_SESSION['user'] = [
-            'id'    => $user['id'],
-            'email' => $user['email'],
+            'id' => (int)$user['id'],
+            'firstname' => (string)($user['firstname'] ?? ''),
+            'lastname' => (string)($user['lastname'] ?? ''),
+            'email' => (string)($user['email'] ?? ''),
+            'phone' => (string)($user['phone'] ?? ''),
+            'role' => (string)($user['role'] ?? 'USER'),
         ];
+
 
         // 6 REDIRECTION INTELLIGENTE
         $redirect = $_POST['redirect'] ?? '/dashboard';

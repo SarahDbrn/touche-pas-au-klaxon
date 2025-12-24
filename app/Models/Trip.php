@@ -8,10 +8,10 @@ declare(strict_types=1);
 final class Trip
 {
     /**
+     * Trouve un trajet par son ID
      *
      * @return array<string,mixed>|null
-    */
-
+     */
     public static function findById(int $id): ?array
     {
         $sql = "SELECT * FROM trips WHERE id = :id";
@@ -21,6 +21,7 @@ final class Trip
     }
 
     /**
+     * Met à jour un trajet
      * @param array<string,mixed> $data
      */
     public static function update(int $id, array $data): void
@@ -49,15 +50,19 @@ final class Trip
         ]);
     }
 
+    /**
+     * Supprime un trajet
+     */
     public static function delete(int $id): void
     {
         Database::query("DELETE FROM trips WHERE id = :id", ['id' => $id]);
     }
-/**
- * Récupère les trajets à venir avec des places disponibles
- *
- * @return array<int, array<string,mixed>>
- */
+
+    /**
+     * Récupère les trajets à venir avec des places disponibles
+     *
+     * @return array<int, array<string,mixed>>
+     */
     public static function getUpcomingAvailableTrips(): array
     {
         $sql = "
@@ -89,8 +94,42 @@ final class Trip
             ORDER BY t.departure_at ASC
         ";
 
-
         $stmt = Database::query($sql);
         return $stmt->fetchAll();
+    }
+
+    /**
+     * Crée un trajet
+     * @param array<string,mixed> $data
+     * @return int id du trajet créé
+     */
+    public static function create(array $data): int
+    {
+        $sql = "
+            INSERT INTO trips (
+                departure_at, arrival_at,
+                total_seats, available_seats,
+                author_id, contact_id,
+                departure_agency_id, arrival_agency_id
+            ) VALUES (
+                :departure_at, :arrival_at,
+                :total_seats, :available_seats,
+                :author_id, :contact_id,
+                :departure_agency_id, :arrival_agency_id
+            )
+        ";
+
+        Database::query($sql, [
+            'departure_at' => $data['departure_at'],
+            'arrival_at' => $data['arrival_at'],
+            'total_seats' => $data['total_seats'],
+            'available_seats' => $data['available_seats'],
+            'author_id' => $data['author_id'],
+            'contact_id' => $data['contact_id'],
+            'departure_agency_id' => $data['departure_agency_id'],
+            'arrival_agency_id' => $data['arrival_agency_id'],
+        ]);
+
+        return (int)Database::getConnection()->lastInsertId();
     }
 }
