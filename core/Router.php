@@ -10,17 +10,20 @@ class Router
         $this->routes = require CONFIG_PATH . '/routes.php';
     }
 
-    public function dispatch(string $url): void
+    public function dispatch(string $url, string $httpMethod): void
     {
         $path = $this->normalize($url);
+        $method = strtoupper($httpMethod);
 
-        if (!isset($this->routes[$path])) {
+        $key = $method . ' ' . $path;
+
+        if (!isset($this->routes[$key])) {
             http_response_code(404);
             echo "404 - Page not found";
             return;
         }
 
-        [$controllerName, $method] = $this->routes[$path];
+        [$controllerName, $action] = $this->routes[$key];
 
         if (!class_exists($controllerName)) {
             http_response_code(500);
@@ -30,13 +33,13 @@ class Router
 
         $controller = new $controllerName();
 
-        if (!method_exists($controller, $method)) {
+        if (!method_exists($controller, $action)) {
             http_response_code(500);
-            echo "Method not found: " . htmlspecialchars($method);
+            echo "Method not found: " . htmlspecialchars($action);
             return;
         }
 
-        $controller->$method();
+        $controller->$action();
     }
 
     private function normalize(string $url): string

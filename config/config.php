@@ -14,6 +14,8 @@ define('DB_NAME', 'touche_pas_au_klaxon');
 define('DB_USER', 'root');
 define('DB_PASS', ''); // XAMPP mac: souvent vide
 
+define('BASE_URL', '/touche-pas-au-klaxon/public');
+
 // Autoload très simple (sans Composer)
 spl_autoload_register(function ($class) {
     $paths = [
