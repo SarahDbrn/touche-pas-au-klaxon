@@ -23,11 +23,17 @@ final class Trip
                 t.available_seats,
 
                 da.name AS departure_agency,
-                aa.name AS arrival_agency
+                aa.name AS arrival_agency,
+
+                u.firstname AS contact_firstname,
+                u.lastname  AS contact_lastname,
+                u.email     AS contact_email,
+                u.phone     AS contact_phone
 
             FROM trips t
             INNER JOIN agencies da ON da.id = t.departure_agency_id
             INNER JOIN agencies aa ON aa.id = t.arrival_agency_id
+            INNER JOIN users u ON u.id = t.contact_id
 
             WHERE
                 t.departure_at > NOW()
@@ -35,6 +41,7 @@ final class Trip
 
             ORDER BY t.departure_at ASC
         ";
+
 
         $stmt = Database::query($sql);
         return $stmt->fetchAll();
